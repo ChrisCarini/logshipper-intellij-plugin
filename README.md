@@ -1,4 +1,4 @@
-# logshipper-intellij-plugin
+# Logshipper
 
 ## Description
 A JetBrains IntelliJ IDEA plugin to ship logs to a remote logstash service.

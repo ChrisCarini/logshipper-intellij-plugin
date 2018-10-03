@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'com.chriscarini'
-version '1.0.0'
+version '1.0.1'
 
 apply plugin: 'java'
 apply plugin: 'idea'
@@ -30,6 +30,10 @@ intellij {
 patchPluginXml {
     changeNotes """
         <h4>[Unreleased]</h4>
+        
+        <h4>[1.0.1] - 2018-10-02</h4>
+        <h5>Changed</h5>
+        <ol><li>Changed name from `logshipper-intellij-plugin` to `Logshipper` for approval on JetBrains plugin repo.</li></ol>
         
         <h4>[1.0.0] - 2018-10-01</h4>
         <h5>Added</h5>

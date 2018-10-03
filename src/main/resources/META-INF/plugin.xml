@@ -1,6 +1,6 @@
 <idea-plugin>
     <id>com.chriscarini.jetbrains.logshipper</id>
-    <name>logshipper-intellij-plugin</name>
+    <name>Logshipper</name>
     <vendor email="chris@chriscarini.com" url="https://jetbrains.chriscarini.com">Chris Carini</vendor>
 
     <description><![CDATA[
