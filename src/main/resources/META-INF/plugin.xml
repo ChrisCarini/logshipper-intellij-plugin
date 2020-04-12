@@ -1,29 +1,30 @@
 <idea-plugin>
-    <id>com.chriscarini.jetbrains.logshipper</id>
-    <name>Logshipper</name>
-    <vendor email="chris@chriscarini.com" url="https://jetbrains.chriscarini.com">Chris Carini</vendor>
+  <id>com.chriscarini.jetbrains.logshipper</id>
+  <name>Logshipper</name>
+  <vendor email="jetbrains@chriscarini.com" url="https://jetbrains.chriscarini.com">Chris Carini</vendor>
 
-    <description><![CDATA[
-    A JetBrains IntelliJ IDEA plugin to ship logs to a remote logstash service.
+  <description><![CDATA[
+    A plugin to ship logs to a remote logstash service.
     ]]></description>
 
-    <idea-version since-build="181" until-build="*"/>
-    <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.platform</depends>
 
-    <extensions defaultExtensionNs="com.intellij">
-        <applicationConfigurable bundle="messages.logshipper" groupId="other"
-                                 instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
-    </extensions>
+  <extensions defaultExtensionNs="com.intellij">
+    <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.configuration.SettingsManager"/>
+    <applicationConfigurable bundle="messages.logshipper" groupId="other"
+                             instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
+  </extensions>
 
-    <application-components>
-        <component>
-            <implementation-class>com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterComponent</implementation-class>
-        </component>
-        <component>
-            <implementation-class>com.chriscarini.jetbrains.logshipper.configuration.SettingsManager</implementation-class>
-        </component>
-    </application-components>
+  <application-components>
+    <component>
+      <implementation-class>
+        com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent
+      </implementation-class>
+    </component>
+    <component>
+      <implementation-class>
+        com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterComponent
+      </implementation-class>
+    </component>
+  </application-components>
 </idea-plugin>

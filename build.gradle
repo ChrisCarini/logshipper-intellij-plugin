@@ -1,18 +1,32 @@
-plugins {
-    id 'org.jetbrains.intellij' version '0.3.4'
+buildscript {
+    ext {
+        javaVersion = '1.8'
+
+        // see https://www.jetbrains.com/intellij-repository/releases/
+        // and https://www.jetbrains.com/intellij-repository/snapshots/
+        // To use/download EAP add '-EAP-SNAPSHOT' to the version, i.e. 'IU-191.6014.8-EAP-SNAPSHOT'
+        intellijVersion = '2020.1'
+//    intellijVersion = '201.6668.60-EAP-SNAPSHOT'
+    }
 }
 
-group 'com.chriscarini'
-version '1.0.1'
+plugins {
+    id 'java'
+    id 'org.jetbrains.intellij' version '0.4.16'
+}
 
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'org.jetbrains.intellij'
+group 'com.chriscarini.jetbrains'
+version '2.1.0'
 
-sourceCompatibility = 1.8
+sourceCompatibility = javaVersion
 
 repositories {
     mavenCentral()
+}
+
+test {
+    useTestNG()
+    useJUnit()
 }
 
 dependencies {
@@ -20,42 +34,73 @@ dependencies {
     compile group: 'net.logstash.log4j', name: 'jsonevent-layout', version: '1.7'
 
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'org.testng:testng:6.1.1'
+    testCompile "org.mockito:mockito-core:2.18.0"
 }
 
 intellij {
-    version '2018.2'
+    version intellijVersion
     plugins[]
-    pluginName 'logshipper-intellij-plugin'
+    pluginName 'Logshipper'
 }
+
+//runIde {
+//  jbrVersion 'jbrex8u202b1483.21'
+//}
+
 patchPluginXml {
     changeNotes """
-        <h4>[Unreleased]</h4>
-        
-        <h4>[1.0.1] - 2018-10-02</h4>
-        <h5>Changed</h5>
-        <ol><li>Changed name from `logshipper-intellij-plugin` to `Logshipper` for approval on JetBrains plugin repo.</li></ol>
-        
-        <h4>[1.0.0] - 2018-10-01</h4>
+        <h4>[2.1.0] - 2020-04-11</h4>
+        <h5>Upgrade</h5>
+        <ol>
+        <li>Upgrading to 2020.1</li>
+        <li>Upgrading IntelliJ Gradle plugin to 0.4.16</li>
+        <li>Upgrading Gradle to 6.2</li>
+        </ol>
         <h5>Added</h5>
-        <ol><li>Initial release.</li></ol>
+        <ol>
+        <li>GitHub Workflow Action for <a href="https://github.com/marketplace/actions/intellij-platform-plugin-verifier">IntelliJ Platform Plugin Verifier</a></li>
+        </ol>
+        <h5>Fixed</h5>
+        <ol>
+        <li>N/A</li>
+        </ol>
         """
 }
 
-// The below file (jetbrainsCredentials.gradle) should contain the below:
-//    project.ext.set("intellijPublishUsername", "YOUR_USERNAME_HERE")
-//    project.ext.set("intellijPublishPassword", "YOUR_PASSWORD_HERE")
-//
-// Because this contains the username and password, this file is also included in .gitignore file.
-apply from: 'jetbrainsCredentials.gradle'
-
-publishPlugin {
-    username intellijPublishUsername
-    password intellijPublishPassword
+// The below will surface warnings as errors - I want
+// this in the project to allow us to catch deprecation
+// notices early and often.
+tasks.withType(JavaCompile) {
+    options.compilerArgs.addAll(['-Xlint:all',
+                                 '-Xlint:-options',
+                                 '-Xlint:-rawtypes',
+                                 '-Xlint:-processing',
+                                 '-Xlint:-path', // Ignore JBR SDK manifest element warnings
+                                 '-proc:none',
+                                 '-Werror',
+                                 '-Xlint:-classfile']) //ignore warnings from dependencies
 }
 
-task checkJetBrainsCreds {
-    doLast{
-        println "Username: " + intellijPublishUsername
-        println "Password " + (project.hasProperty('intellijPublishPassword') ? "IS" : "is NOT") + " set."
+if (System.getenv('IS_CI') != "True") {
+    // The below file (jetbrainsCredentials.gradle) should contain the below:
+    //    project.ext.set("intellijPublishUsername", "YOUR_USERNAME_HERE")
+    //    project.ext.set("intellijPublishPassword", "YOUR_PASSWORD_HERE")
+    //    project.ext.set("intellijPluginPublishToken", "YOUR_TOKEN_HERE")
+    //
+    // Because this contains the username and password, this file is also included in .gitignore file.
+    apply from: 'jetbrainsCredentials.gradle'
+
+    publishPlugin {
+//    username intellijPublishUsername
+//    password intellijPublishPassword
+        token intellijPluginPublishToken
+    }
+
+    task checkJetBrainsCreds {
+        doLast {
+            println "Username: " + intellijPublishUsername
+            println "Password " + (project.hasProperty('intellijPublishPassword') ? "IS" : "is NOT") + " set."
+        }
     }
 }
