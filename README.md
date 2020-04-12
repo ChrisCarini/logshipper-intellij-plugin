@@ -19,21 +19,19 @@ Additionally, users are able to:
 
 
 ## Demo
-For ease, this repo also includes a simple bash script to setup the ELK stack on an OSX machine. Use the `elk_stack.osx.sh` 
-bash script to install / start / stop / restart / upgrade / uninstall ELK.
+For ease, this repo also includes the necessary `docker-compose` files to setup the ELK stack. Use the `elk_stack.sh` 
+bash script to start / stop / restart / status ELK.
 
-It assumes you already have `brew` installed on your OSX machine. See [brew.sh](https://brew.sh/) for installation details on `brew`.
-#### `elk_stack.osx.sh` man page
+It assumes you already have `docker-compose` installed on your machine.
+#### `elk_stack.sh` man page
 ```bash
-Usage: ./elk_stack.osx.sh <subcommand> [options]
+Usage: ./elk_stack.sh <subcommand> [options]
 
 Subcommands:
-    install   Install Elasticsearch, LogStash & Kibana, and setup basic configuration
-    upgrade   Upgrade Elasticsearch, LogStash & Kibana
-    uninstall Uninstall Elasticsearch, LogStash & Kibana
     start     Start the ELK Stack
     stop      Stop the ELK Stack
+    status    Status of ELK Stack
     restart   Restart the ELK Stack
 
-Note: This script is for OSX only and assumes you already have 'brew' installed.
+Note: This script assumes you have 'docker-compose' installed.
 ```
