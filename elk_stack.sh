@@ -38,6 +38,15 @@ sub_status(){
     pushd ./elk
     docker-compose ps
     popd
+
+    echo "#################################################"
+    echo "##                                             ##"
+    echo "##  Access Kibana via: http://localhost:5601/  ##"
+    echo "##                                             ##"
+    echo "##    Username: elastic                        ##"
+    echo "##    Password: changeme                       ##"
+    echo "##                                             ##"
+    echo "#################################################"
 }
 
 sub_restart(){
