@@ -2,11 +2,12 @@ package com.chriscarini.jetbrains.logshipper.logger;
 
 import java.io.IOException;
 import java.io.InterruptedIOException;
-import java.io.PrintWriter;
+import java.io.OutputStreamWriter;
 import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
 import org.apache.log4j.AppenderSkeleton;
 import org.apache.log4j.helpers.LogLog;
 import org.apache.log4j.spi.LoggingEvent;
@@ -17,13 +18,26 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A {@link org.apache.log4j.net.SocketAppender} that allows for a {@link org.apache.log4j.Layout} to be used when
  * writing out to the host/port.
+ *
+ * We *CAN NOT* just use {@link org.apache.log4j.net.SocketAppender} or extend it to work with a
+ * {@link org.apache.log4j.Layout}. The issue is when trying to use the append() method to send an event, the `message`
+ * field of the {@link LoggingEvent} can not be set to anything that will produce json on the respective socket. I've
+ * tried:
+ *    1) passing a raw json {@link String}
+ *    2) passing a {@link net.minidev.json.JSONObject}
+ *
+ * No success in any of these. Boo. :(
+ *
+ * This should functionally be identical to {@link org.apache.log4j.net.SocketAppender}, with the only difference
+ * being that we use an {@link OutputStreamWriter} in place of an {@link java.io.ObjectOutputStream} to allow us
+ * to send a {@link org.apache.log4j.Layout} formatted string over a {@link Socket}.
  */
 public class LayoutSocketAppender extends AppenderSkeleton {
   public static final int DEFAULT_RECONNECT_DELAY = 30000;
   private final InetAddress address;
   private final int port;
   private final int reconnectionDelay;
-  private PrintWriter printWriter;
+  private OutputStreamWriter osw;
   private int counter = 0;
   private Connector connector;
 
@@ -38,7 +52,7 @@ public class LayoutSocketAppender extends AppenderSkeleton {
     this.port = port;
     this.address = getAddressByName(host);
     this.reconnectionDelay = reconnectionDelay;
-    this.connect();
+    this.connect(this.address, this.port);
   }
 
   @Nullable
@@ -62,10 +76,19 @@ public class LayoutSocketAppender extends AppenderSkeleton {
     }
   }
 
-  private void cleanUp() {
-    if (this.printWriter != null) {
-      this.printWriter.close();
-      this.printWriter = null;
+  public void cleanUp() {
+    if (this.osw != null) {
+      try {
+        this.osw.close();
+      } catch (IOException var2) {
+        if (var2 instanceof InterruptedIOException) {
+          Thread.currentThread().interrupt();
+        }
+
+        LogLog.error("Could not close oos.", var2);
+      }
+
+      this.osw = null;
     }
 
     if (this.connector != null) {
@@ -74,26 +97,25 @@ public class LayoutSocketAppender extends AppenderSkeleton {
     }
   }
 
-  private void connect() {
+  void connect(InetAddress address, int port) {
     if (this.address != null) {
       try {
         this.cleanUp();
-        this.printWriter = new PrintWriter((new Socket(this.address, this.port)).getOutputStream());
+        this.osw = new OutputStreamWriter((new Socket(address, port)).getOutputStream(), StandardCharsets.UTF_8);
       } catch (final IOException e) {
         if (e instanceof InterruptedIOException) {
           Thread.currentThread().interrupt();
         }
 
-        final StringBuilder sb = new StringBuilder(
-            "Could not connect to remote log4j server at [" + this.address.getHostName() + ":" + this.port + "].");
+        String msg = "Could not connect to remote log4j server at [" + address.getHostName() + "].";
         if (this.reconnectionDelay > 0) {
-          sb.append(" We will try again later.");
+          msg = msg + " We will try again later.";
           this.fireConnector();
         } else {
-          sb.append(" We are not retrying.");
-          this.errorHandler.error(sb.toString(), e, 0);
+          msg = msg + " We are not retrying.";
+          this.errorHandler.error(msg, e, 0);
         }
-        LogLog.error(sb.toString());
+        LogLog.error(msg);
       }
     }
   }
@@ -112,25 +134,39 @@ public class LayoutSocketAppender extends AppenderSkeleton {
       this.errorHandler.error("No remote host is set for LogstashJSONSocketAppender named \"" + this.name + "\".");
       return;
     }
-    if (this.printWriter == null) {
+    if (this.osw == null) {
       return;
     }
     if (this.layout == null) {
       this.errorHandler.error("No layout is set for LogstashJSONSocketAppender named \"" + this.name + "\".");
       return;
     }
-    final String format = this.layout.format(event);
-    this.printWriter.append(format);
-    this.printWriter.flush();
-    if (++this.counter >= 1) {
-      this.counter = 0;
+    try {
+      final String format = this.layout.format(event);
+      this.osw.write(format);
+      this.osw.flush();
+      if (++this.counter >= 1) {
+        this.counter = 0;
+      }
+    } catch (IOException exception) {
+      if (exception instanceof InterruptedIOException) {
+        Thread.currentThread().interrupt();
+      }
+
+      this.osw = null;
+      LogLog.warn("Detected problem with connection: " + exception);
+      if (this.reconnectionDelay > 0) {
+        this.fireConnector();
+      } else {
+        this.errorHandler.error("Detected problem with connection, not reconnecting.", exception, 0);
+      }
     }
   }
 
   private void fireConnector() {
     if (this.connector == null) {
       LogLog.debug("Starting a new connector thread.");
-      this.connector = new Connector(this.address, this.port);
+      this.connector = new LayoutSocketAppender.Connector();
       this.connector.setDaemon(true);
       this.connector.setPriority(1);
       this.connector.start();
@@ -147,14 +183,10 @@ public class LayoutSocketAppender extends AppenderSkeleton {
     return true;
   }
 
-  private class Connector extends Thread {
-    private final InetAddress address;
-    private final int port;
+  class Connector extends Thread {
     boolean interrupted = false;
 
-    Connector(final InetAddress address, final int port) {
-      this.address = address;
-      this.port = port;
+    Connector() {
     }
 
     public void run() {
@@ -162,10 +194,12 @@ public class LayoutSocketAppender extends AppenderSkeleton {
         if (!this.interrupted) {
           try {
             sleep(LayoutSocketAppender.this.reconnectionDelay);
-            LogLog.debug("Attempting connection to " + this.address.getHostName() + ":" + this.port);
+            LogLog.debug("Attempting connection to " + LayoutSocketAppender.this.address.getHostName() + ":"
+                + LayoutSocketAppender.this.port);
             synchronized (this) {
-              LayoutSocketAppender.this.printWriter =
-                  new PrintWriter((new Socket(this.address, this.port)).getOutputStream());
+              LayoutSocketAppender.this.osw = new OutputStreamWriter(
+                  (new Socket(LayoutSocketAppender.this.address, LayoutSocketAppender.this.port)).getOutputStream(),
+                  StandardCharsets.UTF_8);
               LayoutSocketAppender.this.connector = null;
               LogLog.debug("Connection established. Exiting connector thread.");
             }
@@ -173,15 +207,17 @@ public class LayoutSocketAppender extends AppenderSkeleton {
             LogLog.debug("Connector interrupted. Leaving loop.");
             return;
           } catch (final ConnectException e) {
-            LogLog.debug("Remote host " + this.address.getHostName() + ":" + this.port + " refused connection.");
+            LogLog.debug(
+                "Remote host " + LayoutSocketAppender.this.address.getHostName() + ":" + LayoutSocketAppender.this.port
+                    + " refused connection.");
             continue;
           } catch (final IOException e) {
             if (e instanceof InterruptedIOException) {
               Thread.currentThread().interrupt();
             }
 
-            LogLog.debug(
-                "Could not connect to " + this.address.getHostName() + ":" + this.port + ". Exception is " + e);
+            LogLog.debug("Could not connect to " + LayoutSocketAppender.this.address.getHostName() + ":"
+                + LayoutSocketAppender.this.port + ". Exception is " + e);
             continue;
           }
         }
