@@ -9,6 +9,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.messages.MessageBusConnection;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -79,7 +81,13 @@ public class ConstantLogEntryTesterComponent implements Disposable {
   private void logTime() {
     final SettingsManager.Settings settings = SettingsManager.getInstance().getState();
     if (settings.generateSampleLogMessages) {
-      LOG.info(String.format("It is currently: %s", new Date().toString()));
+      String hostname;
+      try {
+        hostname = InetAddress.getLocalHost().toString();
+      } catch (UnknownHostException e) {
+        hostname = "unknown hostname";
+      }
+      LOG.info(String.format("It is currently: %s on %s", new Date().toString(), hostname));
     }
   }
 }
