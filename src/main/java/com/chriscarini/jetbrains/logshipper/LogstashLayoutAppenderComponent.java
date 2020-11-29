@@ -8,6 +8,7 @@ import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import org.apache.log4j.Appender;
 import org.apache.log4j.LogManager;
+import org.jetbrains.annotations.NotNull;
 
 
 /**
@@ -31,19 +32,27 @@ public class LogstashLayoutAppenderComponent {
     if (!StringUtil.isEmpty(settings.hostname) && !StringUtil.isEmpty(settings.port)) {
       final Appender appender =
           new LogstashJSONSocketAppender(settings.hostname, Integer.decode(settings.port), reconnectionDelay,
-              includeLocationInfo);
+              includeLocationInfo, this::cleanupAppender);
 
       // Add the appender to the root Logger
       LogManager.getRootLogger().addAppender(appender);
 
       // Register a shutdown task to remove the appender and close it cleanly.
       ShutDownTracker.getInstance().registerShutdownTask(() -> {
-        LogManager.getRootLogger().removeAppender(appender);
-        appender.close();
+        cleanupAppender(appender);
       });
       LOG.info("Added Logshipper appender to root logger");
     } else {
       LOG.info("Logshipper hostname / port is empty, please configure this in the settings.");
     }
+  }
+
+  /**
+   * CLeanup the provided appender, removing it from the root logger, and calling its {@link Appender#close()} method.
+   * @param thisAppender The {@link Appender} to cleanup.
+   */
+  private void cleanupAppender(@NotNull final Appender thisAppender) {
+    LogManager.getRootLogger().removeAppender(thisAppender);
+    thisAppender.close();
   }
 }

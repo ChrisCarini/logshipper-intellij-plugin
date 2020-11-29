@@ -1,11 +1,15 @@
 package com.chriscarini.jetbrains.logshipper.logger;
 
 import com.intellij.ide.IdeBundle;
+import com.intellij.openapi.Disposable;
+import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
+import com.intellij.openapi.util.Disposer;
 import com.intellij.ui.LicensingFacade;
 import com.intellij.util.text.DateFormatUtil;
 import java.util.Properties;
+import java.util.function.Consumer;
 import net.logstash.log4j.JSONEventLayoutV1;
 import org.apache.log4j.spi.LoggingEvent;
 import org.jetbrains.annotations.Nullable;
@@ -14,15 +18,22 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A {@link LayoutSocketAppender} for Logstash. Automatically registers the {@link JSONEventLayoutV1} for the layout.
  */
-public class LogstashJSONSocketAppender extends LayoutSocketAppender {
+public class LogstashJSONSocketAppender extends LayoutSocketAppender implements Disposable {
+  private final Consumer<LogstashJSONSocketAppender> disposableConsumer;
+
   public LogstashJSONSocketAppender(final String host, final int port, final int reconnectionDelay,
-      final boolean includeLocationInfo) {
+      final boolean includeLocationInfo, final Consumer<LogstashJSONSocketAppender> disposableConsumer) {
     super(host, port, reconnectionDelay);
     setLayout(new JSONEventLayoutV1(includeLocationInfo));
+    this.disposableConsumer = disposableConsumer;
   }
 
   @Override
   public void append(@Nullable LoggingEvent event) {
+    if (ApplicationManager.getApplication().isDisposed()) {
+      Disposer.dispose(this);
+    }
+
     setEventPropertyIfNotNull(event, "PermanentInstallationID", PermanentInstallationID.get());
 
     final Properties properties = System.getProperties();
@@ -33,17 +44,19 @@ public class LogstashJSONSocketAppender extends LayoutSocketAppender {
         IdeBundle.message("about.box.vm", properties.getProperty("java.vm.name", "unknown"),
             properties.getProperty("java.vendor", "unknown")));
 
-    final ApplicationInfoEx appInfoEx = ApplicationInfoEx.getInstanceEx();
-    setEventPropertyIfNotNull(event, "FullApplicationName", appInfoEx.getFullApplicationName());
-    setEventPropertyIfNotNull(event, "PackageCode", appInfoEx.getPackageCode());
-    setEventPropertyIfNotNull(event, "ApiVersion", appInfoEx.getApiVersion());
-    setEventPropertyIfNotNull(event, "CompanyName", appInfoEx.getCompanyName());
-    setEventPropertyIfNotNull(event, "FullVersion", appInfoEx.getFullVersion());
-    setEventPropertyIfNotNull(event, "StrictVersion", appInfoEx.getStrictVersion());
-    setEventPropertyIfNotNull(event, "VersionName", appInfoEx.getVersionName());
-    setEventPropertyIfNotNull(event, "Build", appInfoEx.getBuild().asString());
-    setEventPropertyIfNotNull(event, "BuildDate",
-        DateFormatUtil.getIso8601Format().format(appInfoEx.getBuildDate().getTime()));
+    if (!ApplicationManager.getApplication().isDisposed()) {
+      final ApplicationInfoEx appInfoEx = ApplicationInfoEx.getInstanceEx();
+      setEventPropertyIfNotNull(event, "FullApplicationName", appInfoEx.getFullApplicationName());
+      setEventPropertyIfNotNull(event, "PackageCode", appInfoEx.getPackageCode());
+      setEventPropertyIfNotNull(event, "ApiVersion", appInfoEx.getApiVersion());
+      setEventPropertyIfNotNull(event, "CompanyName", appInfoEx.getCompanyName());
+      setEventPropertyIfNotNull(event, "FullVersion", appInfoEx.getFullVersion());
+      setEventPropertyIfNotNull(event, "StrictVersion", appInfoEx.getStrictVersion());
+      setEventPropertyIfNotNull(event, "VersionName", appInfoEx.getVersionName());
+      setEventPropertyIfNotNull(event, "Build", appInfoEx.getBuild().asString());
+      setEventPropertyIfNotNull(event, "BuildDate",
+          DateFormatUtil.getIso8601Format().format(appInfoEx.getBuildDate().getTime()));
+    }
 
     final LicensingFacade licensingFacade = LicensingFacade.getInstance();
     if (licensingFacade != null) {
@@ -66,5 +79,10 @@ public class LogstashJSONSocketAppender extends LayoutSocketAppender {
     if (event != null) {
       event.setProperty(getFullApplicationName, fullApplicationName);
     }
+  }
+
+  @Override
+  public void dispose() {
+    disposableConsumer.accept(this);
   }
 }
