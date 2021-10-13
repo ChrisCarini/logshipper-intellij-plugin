@@ -3,7 +3,7 @@ A JetBrains IntelliJ IDEA plugin to ship logs to a remote logstash service.
 
 [![GitHub License](https://img.shields.io/github/license/ChrisCarini/logshipper-intellij-plugin?style=flat-square)](https://github.com/ChrisCarini/logshipper-intellij-plugin/blob/master/LICENSE)
 [![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/v/11195-logshipper?label=Latest%20Plugin%20Release&style=flat-square)](https://plugins.jetbrains.com/plugin/11195-logshipper)
-[![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/11195-logshipper?style=flat-square)](https://plugins.jetbrains.com/plugin/11195-logshipper)
+[![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/r/rating/11195-logshipper?style=flat-square)](https://plugins.jetbrains.com/plugin/11195-logshipper)
 [![JetBrains IntelliJ Plugins](https://img.shields.io/jetbrains/plugin/d/11195-logshipper?style=flat-square)](https://plugins.jetbrains.com/plugin/11195-logshipper)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ChrisCarini/logshipper-intellij-plugin/JetBrains%20Plugin%20CI?logo=GitHub&style=flat-square)](https://github.com/ChrisCarini/logshipper-intellij-plugin/actions?query=workflow%3A%22JetBrains+Plugin+CI%22)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ChrisCarini/logshipper-intellij-plugin/IntelliJ%20Plugin%20Compatibility?label=IntelliJ%20Plugin%20Compatibility&logo=GitHub&style=flat-square)](https://github.com/ChrisCarini/logshipper-intellij-plugin/actions?query=workflow%3A%22IntelliJ+Plugin+Compatibility%22)
