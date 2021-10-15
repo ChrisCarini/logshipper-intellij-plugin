@@ -4,6 +4,19 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.5.0] - 2021-10-15
+### Added
 - Restructured file to extract all variables into file.
 - Adding ability to publish to different channels based on SemVer pre-release labels.
 - Adding [JetBrains Plugin Signing](https://plugins.jetbrains.com/docs/intellij/plugin-signing.html)
@@ -16,14 +29,8 @@
 - Upgrading IntelliJ to 2021.2.2
 - Upgrading IntelliJ Gradle plugin to 1.2.0
 
-### Deprecated
-
 ### Removed
-- Remove `description` from `plugin.xml` _(value is taken from `README.md` as part of Gradle `patchPluginXml` task)_
-
-### Fixed
-
-### Security
+- Remove descriptionplugin.xmlREADME.mdpatchPluginXml
 
 ## [2.4.0] - 2021-04-10
 ### Changed
