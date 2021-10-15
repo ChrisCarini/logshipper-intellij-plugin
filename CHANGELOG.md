@@ -30,7 +30,7 @@
 - Upgrading IntelliJ Gradle plugin to 1.2.0
 
 ### Removed
-- Remove descriptionplugin.xmlREADME.mdpatchPluginXml
+- Remove `description` from `plugin.xml` _(value is taken from `README.md` as part of Gradle `patchPluginXml` task)_
 
 ## [2.4.0] - 2021-04-10
 ### Changed
