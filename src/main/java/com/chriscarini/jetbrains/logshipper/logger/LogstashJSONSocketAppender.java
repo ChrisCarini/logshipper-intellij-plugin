@@ -47,7 +47,6 @@ public class LogstashJSONSocketAppender extends LayoutSocketAppender implements 
     if (!ApplicationManager.getApplication().isDisposed()) {
       final ApplicationInfoEx appInfoEx = ApplicationInfoEx.getInstanceEx();
       setEventPropertyIfNotNull(event, "FullApplicationName", appInfoEx.getFullApplicationName());
-      setEventPropertyIfNotNull(event, "PackageCode", appInfoEx.getPackageCode());
       setEventPropertyIfNotNull(event, "ApiVersion", appInfoEx.getApiVersion());
       setEventPropertyIfNotNull(event, "CompanyName", appInfoEx.getCompanyName());
       setEventPropertyIfNotNull(event, "FullVersion", appInfoEx.getFullVersion());
@@ -67,17 +66,17 @@ public class LogstashJSONSocketAppender extends LayoutSocketAppender implements 
       setEventPropertyIfNotNull(event, "LicenseExpirationDate",
           licensingFacade.getLicenseExpirationDate() != null ? DateFormatUtil.getIso8601Format()
               .format(licensingFacade.getLicenseExpirationDate()) : "Unknown");
-      setEventPropertyIfNotNull(event, "ConfirmationStamps", licensingFacade.confirmationStamps.toString());
+      setEventPropertyIfNotNull(event, "ConfirmationStamps", licensingFacade.confirmationStamps != null ? licensingFacade.confirmationStamps.toString() : "null");
     }
 
     // Do the normal thing now that we've augmented the event w/ data we care about.
     super.append(event);
   }
 
-  private void setEventPropertyIfNotNull(@Nullable LoggingEvent event, String getFullApplicationName,
-      @Nullable String fullApplicationName) {
+  private void setEventPropertyIfNotNull(@Nullable LoggingEvent event, String propName,
+      @Nullable String propValue) {
     if (event != null) {
-      event.setProperty(getFullApplicationName, fullApplicationName);
+      event.setProperty(propName, propValue != null ? propValue : "null");
     }
   }
 
