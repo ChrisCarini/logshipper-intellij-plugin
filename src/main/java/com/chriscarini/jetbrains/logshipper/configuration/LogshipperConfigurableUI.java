@@ -47,9 +47,7 @@ public class LogshipperConfigurableUI implements ConfigurableUi<SettingsManager.
     exampleConfigTextArea.setEnabled(true);
     exampleConfigTextArea.setEditable(false);
     final JButton copyExampleConfigToClipboardButton = new JButton(Messages.message("button.copy.to.clipboard"));
-    copyExampleConfigToClipboardButton.addActionListener(e -> {
-      CopyPasteManager.getInstance().setContents(new StringSelection(EXAMPLE_LOGSTASH_CONFIG));
-    });
+    copyExampleConfigToClipboardButton.addActionListener(e -> CopyPasteManager.getInstance().setContents(new StringSelection(EXAMPLE_LOGSTASH_CONFIG)));
 
     mainPanel.add(FormBuilder.createFormBuilder()
         .addComponent(new TitledSeparator(Messages.message("title.logstash.settings")))

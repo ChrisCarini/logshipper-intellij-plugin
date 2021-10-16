@@ -87,7 +87,7 @@ public class ConstantLogEntryTesterComponent implements Disposable {
       } catch (UnknownHostException e) {
         hostname = "unknown hostname";
       }
-      LOG.info(String.format("It is currently: %s on %s", new Date().toString(), hostname));
+      LOG.info(String.format("It is currently: %s on %s", new Date(), hostname));
     }
   }
 }
