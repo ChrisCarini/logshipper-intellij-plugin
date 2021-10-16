@@ -38,9 +38,7 @@ public class LogstashLayoutAppenderComponent {
       LogManager.getRootLogger().addAppender(appender);
 
       // Register a shutdown task to remove the appender and close it cleanly.
-      ShutDownTracker.getInstance().registerShutdownTask(() -> {
-        cleanupAppender(appender);
-      });
+      ShutDownTracker.getInstance().registerShutdownTask(() -> cleanupAppender(appender));
       LOG.info("Added Logshipper appender to root logger");
     } else {
       LOG.info("Logshipper hostname / port is empty, please configure this in the settings.");
