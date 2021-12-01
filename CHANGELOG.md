@@ -6,7 +6,6 @@
 ### Added
 
 ### Changed
-- Upgrading IntelliJ to 2021.3
 
 ### Deprecated
 
@@ -15,6 +14,10 @@
 ### Fixed
 
 ### Security
+
+## [2.5.2] - 2021-12-01
+### Changed
+- Upgrading IntelliJ to 2021.3
 
 ## [2.5.0] - 2021-10-15
 ### Added
@@ -25,10 +28,12 @@
 - Adding GitHub build & release workflows.
 - Adding JetBrains Qodana (experimental, testing only)
 
+
 ### Changed
 - Upgrading Gradle to 6.6
 - Upgrading IntelliJ to 2021.2.2
 - Upgrading IntelliJ Gradle plugin to 1.2.0
+
 
 ### Removed
 - Remove `description` from `plugin.xml` _(value is taken from `README.md` as part of Gradle `patchPluginXml` task)_
@@ -52,6 +57,7 @@
 ### Added
 - More detailed information to the shipped logs.
 
+
 ### Fixed
 - Issue where network disconnection would cause all future log messages to not be shipped.
 
@@ -63,6 +69,7 @@
 ## [2.1.0] - 2020-04-11
 ### Added
 - GitHub Workflow Action for <a href="https://github.com/marketplace/actions/intellij-platform-plugin-verifier">IntelliJ Platform Plugin Verifier</a>
+
 
 ### Changed
 - Upgrading to 2020.1
