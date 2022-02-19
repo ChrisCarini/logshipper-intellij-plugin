@@ -38,8 +38,9 @@ jobs:
           ide-versions: |
             ideaIC:2021.3
             ideaIU:2021.3
-            ideaIC:LATEST-EAP-SNAPSHOT
-            ideaIU:LATEST-EAP-SNAPSHOT
+#             TODO (ChrisCarini#26) - Re-enable after 2022 changes have landed
+#            ideaIC:LATEST-EAP-SNAPSHOT
+#            ideaIU:LATEST-EAP-SNAPSHOT
 
       - name: Get log file path and print contents
         run: |
