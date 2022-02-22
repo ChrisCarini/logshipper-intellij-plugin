@@ -10,4 +10,10 @@ network.host: 0.0.0.0
 #
 xpack.license.self_generated.type: trial
 xpack.security.enabled: true
-xpack.monitoring.collection.enabled: true
+
+# https://www.elastic.co/guide/en/elasticsearch/reference/7.16/modules-cluster.html#disk-based-shard-allocation
+cluster.routing.allocation.disk.watermark.enable_for_single_data_node: true
+cluster.routing.allocation.disk.watermark.low: 98%
+cluster.routing.allocation.disk.watermark.high: 99%
+cluster.routing.allocation.disk.watermark.flood_stage: 99%
+cluster.routing.allocation.disk.threshold_enabled: false

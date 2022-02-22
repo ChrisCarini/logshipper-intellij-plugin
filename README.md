@@ -21,21 +21,38 @@ Additionally, users are able to:
 * generate sample log messages for testing / debugging purposes.
     - **Note:** this *may* fill up your log, as the test log messages happen once every 2 seconds.
 
-
 ## Demo
-For ease, this repo also includes the necessary `docker-compose` files to setup the ELK stack. Use the `elk_stack.sh` 
-bash script to start / stop / restart / status ELK.
+For ease, this repo also includes the necessary `docker-compose` files to setup the ELK stack.
 
-It assumes you already have `docker-compose` installed on your machine.
+Use the `./elk_stack.sh` bash script to init / start / stop / restart / status / purge ELK stack.
+
+### Quick Start
+
+1. **Start ELK**
+    ```shell
+    ./elk_stack.sh init
+    ```
+
+2. **Launch the IDE** with Logshipper plugin
+3. **Configure** Logshipper settings
+4. **Navigate** to http://localhost:5601 and login with `elastic/changeme`.
+5. Find the 'Logshipper Telemetry PoC' dashboard
+6. Profit!
+
 #### `elk_stack.sh` man page
+
 ```bash
 Usage: ./elk_stack.sh <subcommand> [options]
 
 Subcommands:
+    init      Start the ELK Stack & add sample Logshipper dashboard
+
     start     Start the ELK Stack
     stop      Stop the ELK Stack
     status    Status of ELK Stack
     restart   Restart the ELK Stack
+
+    purge     Stop & delete all containers associated with Logshipper
 
 Note: This script assumes you have 'docker-compose' installed.
 ```
