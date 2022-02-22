@@ -11,18 +11,66 @@ STACK_NAME=elk
 sub_help(){
     echo "Usage: $prog_name <subcommand> [options]\n"
     echo "Subcommands:"
+    echo "    init      Start the ELK Stack & add sample Logshipper dashboard"
+    echo ""
     echo "    start     Start the ELK Stack"
     echo "    stop      Stop the ELK Stack"
     echo "    status    Status of ELK Stack"
     echo "    restart   Restart the ELK Stack"
     echo ""
+    echo "    purge     Stop & delete all containers associated with Logshipper"
+    echo ""
     echo "Note: This script assumes you have 'docker-compose' installed."
     echo ""
 }
 
+access_info(){
+    echo "#################################################"
+    echo "##                                             ##"
+    echo "##  Access Kibana via: http://localhost:5601/  ##"
+    echo "##                                             ##"
+    echo "##    Username: elastic                        ##"
+    echo "##    Password: changeme                       ##"
+    echo "##                                             ##"
+    echo "#################################################"
+}
+
+sub_init(){
+    pushd ./elk
+
+    # Bring up the containers
+    docker-compose up -d --force-recreate --renew-anon-volumes
+
+    # Test for Kibana being ready
+    function test_kibana_status(){
+      docker exec -it elk-kibana-1 /bin/bash -c "curl localhost:5601/api/status -u 'elastic:changeme'" 2>&1 | jq .status.overall.summary 2>&1
+    }
+    until test_kibana_status | grep -q -m 1 "All services are available"; do
+      printf "[$(date +"%Y-%m-%dT%H:%M:%S%z")] Waiting for Kibana to be available...\r"
+      sleep 1
+    done
+    echo 'Kibana ready!'
+
+    # Add a sample dashboard into Kibana
+    echo "Adding dashboard for 'Logshipper Telemetry PoC'..."
+    DASHBOARD_FILE=./kibana/Logshipper\ Telemetry\ PoC\ Dashboard.ndjson
+    cat "${DASHBOARD_FILE}" | jq -c > "${DASHBOARD_FILE}.TMP" && mv "${DASHBOARD_FILE}.TMP" "${DASHBOARD_FILE}"
+    docker-compose exec kibana /bin/bash -c "curl -X POST localhost:5601/api/saved_objects/_import?createNewCopies=true \
+        -H 'kbn-xsrf: true' \
+        --form file=@/usr/share/kibana/dash.ndjson \
+        -u 'elastic:changeme'
+    "
+    git restore "${DASHBOARD_FILE}"
+    echo 'Dashboard added!'
+
+    popd
+
+    sub_status
+}
+
 sub_start(){
     pushd ./elk
-    docker-compose up -d
+    docker-compose up -d --force-recreate --renew-anon-volumes
     popd
 
     sub_status
@@ -39,19 +87,20 @@ sub_status(){
     docker-compose ps
     popd
 
-    echo "#################################################"
-    echo "##                                             ##"
-    echo "##  Access Kibana via: http://localhost:5601/  ##"
-    echo "##                                             ##"
-    echo "##    Username: elastic                        ##"
-    echo "##    Password: changeme                       ##"
-    echo "##                                             ##"
-    echo "#################################################"
+    access_info
 }
 
 sub_restart(){
     sub_stop
     sub_start
+}
+
+sub_purge(){
+    pushd ./elk
+    docker-compose rm -s -v -f
+    docker-compose down -v
+    docker volume prune -f
+    popd
 }
 
 subcommand=$1

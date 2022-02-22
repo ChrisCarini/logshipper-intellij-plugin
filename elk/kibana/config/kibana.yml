@@ -3,11 +3,18 @@
 ## https://github.com/elastic/kibana/blob/master/src/dev/build/tasks/os_packages/docker_generator/templates/kibana_yml.template.js
 #
 server.name: kibana
-server.host: "0"
+server.host: "0.0.0.0"
 elasticsearch.hosts: [ "http://elasticsearch:9200" ]
-xpack.monitoring.ui.container.elasticsearch.enabled: true
+monitoring.ui.container.elasticsearch.enabled: true
 
-## X-Pack security credentials
-#
-elasticsearch.username: elastic
-elasticsearch.password: changeme
+#  sh-5.0# elasticsearch-service-tokens create "elastic/kibana" "elastic_kibana_token"
+#  SERVICE_TOKEN elastic/kibana/elastic_kibana_token = AAEAAWVsYXN0aWMva2liYW5hL2VsYXN0aWNfa2liYW5hX3Rva2VuOktrOVF0Tjg4UmoyNVhkVWdSNzJMT0E
+elasticsearch.serviceAccountToken: AAEAAWVsYXN0aWMva2liYW5hL2VsYXN0aWNfa2liYW5hX3Rva2VuOktrOVF0Tjg4UmoyNVhkVWdSNzJMT0E
+
+xpack.reporting.roles.enabled: false
+xpack.security.session.idleTimeout: 8h  # Default timeout of 8 hours.
+xpack.security.session.lifespan: 30d    # Default lifespan of 30 days.
+
+# Disable Telemetry
+# Ref: https://www.elastic.co/guide/en/kibana/current/telemetry-settings-kbn.html
+telemetry.enabled: false
