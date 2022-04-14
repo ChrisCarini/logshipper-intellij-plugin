@@ -8,7 +8,8 @@ A JetBrains IntelliJ IDEA plugin to ship logs to a remote logstash service.
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ChrisCarini/logshipper-intellij-plugin/JetBrains%20Plugin%20CI?logo=GitHub&style=flat-square)](https://github.com/ChrisCarini/logshipper-intellij-plugin/actions?query=workflow%3A%22JetBrains+Plugin+CI%22)
 [![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ChrisCarini/logshipper-intellij-plugin/IntelliJ%20Plugin%20Compatibility?label=IntelliJ%20Plugin%20Compatibility&logo=GitHub&style=flat-square)](https://github.com/ChrisCarini/logshipper-intellij-plugin/actions?query=workflow%3A%22IntelliJ+Plugin+Compatibility%22)
 
-This plugin adds a custom `log4j` `SocketAppender` to the root `Logger` of IntelliJ as to ship all logs to logstash.
+This plugin adds a custom `java.util.logging` `Handler` to the root `Logger` of IntelliJ, allowing all logs to be
+shipped to a logstash server.
 
 ## Configuration
 Users are able to configure the `logstash`:
@@ -17,7 +18,7 @@ Users are able to configure the `logstash`:
 * reconnect delay
 
 Additionally, users are able to:
-* include location information from the `log4j` `LoggingEvent`.
+* include location information from the `LogRecord`.
 * generate sample log messages for testing / debugging purposes.
     - **Note:** this *may* fill up your log, as the test log messages happen once every 2 seconds.
 

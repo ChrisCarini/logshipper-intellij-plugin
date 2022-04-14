@@ -9,6 +9,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.util.messages.MessageBusConnection;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Date;
@@ -20,74 +21,74 @@ import java.util.concurrent.TimeUnit;
  * An application component used to generate sample log messages.
  */
 public class ConstantLogEntryTesterComponent implements Disposable {
-  private static final Logger LOG = Logger.getInstance(ConstantLogEntryTesterComponent.class);
+    private static final Logger LOG = Logger.getInstance(ConstantLogEntryTesterComponent.class);
 
-  private static final long LOG_FREQUENCY = 2; // frequency for adding a log message to IDE logs.
+    private static final long LOG_FREQUENCY = 2; // frequency for adding a log message to IDE logs.
 
-  private ScheduledFuture<?> logMessageJob;
+    private ScheduledFuture<?> logMessageJob;
 
-  /**
-   * Default constructor. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
-   * before starting the log message generation job.
-   */
-  public ConstantLogEntryTesterComponent() {
-    Disposer.register(ApplicationManager.getApplication(), this);
-    this.initComponent();
-  }
+    /**
+     * Default constructor. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
+     * before starting the log message generation job.
+     */
+    public ConstantLogEntryTesterComponent() {
+        Disposer.register(ApplicationManager.getApplication(), this);
+        this.initComponent();
+    }
 
-  public static ConstantLogEntryTesterComponent getInstance() {
-    return ApplicationManager.getApplication().getComponent(ConstantLogEntryTesterComponent.class);
-  }
+    public static ConstantLogEntryTesterComponent getInstance() {
+        return ApplicationManager.getApplication().getComponent(ConstantLogEntryTesterComponent.class);
+    }
 
-  /**
-   * Initialize this component. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
-   * before starting the log message generation job.
-   */
-  public void initComponent() {
-    final SettingsManager.Settings settings = SettingsManager.getInstance().getState();
-    if (settings.generateSampleLogMessages && logMessageJob == null) {
-      this.logMessageJob = JobScheduler.getScheduler()
-          .scheduleWithFixedDelay(this::logTime, LOG_FREQUENCY, LOG_FREQUENCY, TimeUnit.SECONDS);
+    /**
+     * Initialize this component. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
+     * before starting the log message generation job.
+     */
+    public void initComponent() {
+        final SettingsManager.Settings settings = SettingsManager.getInstance().getState();
+        if (settings.generateSampleLogMessages && logMessageJob == null) {
+            this.logMessageJob = JobScheduler.getScheduler()
+                    .scheduleWithFixedDelay(this::logTime, LOG_FREQUENCY, LOG_FREQUENCY, TimeUnit.SECONDS);
 
-      // Subscribe to appWillBeClosed event to emit shutdown metric
-      // we cannot do this disposeComponent as services seem to get killed too fast (before dispose but after appClosing)
-      final Application app = ApplicationManager.getApplication();
-      final MessageBusConnection connection = app.getMessageBus().connect(app);
-      connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
-        @Override
-        public void appWillBeClosed(final boolean isRestart) {
-          cancelLogMessageJob();
+            // Subscribe to appWillBeClosed event to emit shutdown metric
+            // we cannot do this disposeComponent as services seem to get killed too fast (before dispose but after appClosing)
+            final Application app = ApplicationManager.getApplication();
+            final MessageBusConnection connection = app.getMessageBus().connect(app);
+            connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
+                @Override
+                public void appWillBeClosed(final boolean isRestart) {
+                    cancelLogMessageJob();
+                }
+            });
         }
-      });
     }
-  }
 
-  @Override
-  public void dispose() {
-    LOG.debug("Disposing ConstantLogEntryTesterComponent...");
-    cancelLogMessageJob();
-  }
-
-  /**
-   * Cancel the existing log message job.
-   */
-  public void cancelLogMessageJob() {
-    if (logMessageJob != null) {
-      logMessageJob.cancel(false);
-      logMessageJob = null;
+    @Override
+    public void dispose() {
+        LOG.debug("Disposing ConstantLogEntryTesterComponent...");
+        cancelLogMessageJob();
     }
-  }
 
-  private void logTime() {
-    final SettingsManager.Settings settings = SettingsManager.getInstance().getState();
-    if (settings.generateSampleLogMessages) {
-      String hostname;
-      try {
-        hostname = InetAddress.getLocalHost().toString();
-      } catch (UnknownHostException e) {
-        hostname = "unknown hostname";
-      }
-      LOG.info(String.format("It is currently: %s on %s", new Date(), hostname));
+    /**
+     * Cancel the existing log message job.
+     */
+    public void cancelLogMessageJob() {
+        if (logMessageJob != null) {
+            logMessageJob.cancel(false);
+            logMessageJob = null;
+        }
     }
-  }
+
+    private void logTime() {
+        final SettingsManager.Settings settings = SettingsManager.getInstance().getState();
+        if (settings.generateSampleLogMessages) {
+            String hostname;
+            try {
+                hostname = InetAddress.getLocalHost().toString();
+            } catch (UnknownHostException e) {
+                hostname = "unknown hostname";
+            }
+            LOG.info(String.format("It is currently: %s on %s", new Date(), hostname));
+        }
+    }
 }
