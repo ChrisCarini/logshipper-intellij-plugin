@@ -4,12 +4,16 @@
 
 ## [Unreleased]
 ### Added
+- Changing connection settings will begin shipping logs without needing an IDE restart. 
 
 ### Changed
+- Upgrading IntelliJ to 2022.1
+- Upgrading demo ELK cluster to 8.0.0
 
 ### Deprecated
 
 ### Removed
+- Removing log4j dependency / reliance to align with [the IntelliJ Platform change](https://blog.jetbrains.com/platform/2022/02/removing-log4j-from-the-intellij-platform/).
 
 ### Fixed
 

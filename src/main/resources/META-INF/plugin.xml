@@ -15,6 +15,11 @@
                              instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
   </extensions>
 
+  <applicationListeners>
+    <listener class="com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent"
+              topic="com.intellij.ide.AppLifecycleListener"/>
+  </applicationListeners>
+
   <application-components>
     <component>
       <implementation-class>
