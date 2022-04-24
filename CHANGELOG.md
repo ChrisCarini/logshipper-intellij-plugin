@@ -4,20 +4,28 @@
 
 ## [Unreleased]
 ### Added
+
+### Changed
+
+### Deprecated
+
+### Removed
+
+### Fixed
+
+### Security
+
+## [2.6.0] - 2022-04-24
+### Added
 - Changing connection settings will begin shipping logs without needing an IDE restart. 
+- Plugin Icon <img src="https://raw.githubusercontent.com/ChrisCarini/logshipper-intellij-plugin/master/icon/pluginIcon.svg" width="24" />
 
 ### Changed
 - Upgrading IntelliJ to 2022.1
 - Upgrading demo ELK cluster to 8.0.0
 
-### Deprecated
-
 ### Removed
 - Removing log4j dependency / reliance to align with [the IntelliJ Platform change](https://blog.jetbrains.com/platform/2022/02/removing-log4j-from-the-intellij-platform/).
-
-### Fixed
-
-### Security
 
 ## [2.5.2] - 2021-12-01
 ### Changed
@@ -32,12 +40,10 @@
 - Adding GitHub build & release workflows.
 - Adding JetBrains Qodana (experimental, testing only)
 
-
 ### Changed
 - Upgrading Gradle to 6.6
 - Upgrading IntelliJ to 2021.2.2
 - Upgrading IntelliJ Gradle plugin to 1.2.0
-
 
 ### Removed
 - Remove `description` from `plugin.xml` _(value is taken from `README.md` as part of Gradle `patchPluginXml` task)_
@@ -61,7 +67,6 @@
 ### Added
 - More detailed information to the shipped logs.
 
-
 ### Fixed
 - Issue where network disconnection would cause all future log messages to not be shipped.
 
@@ -73,7 +78,6 @@
 ## [2.1.0] - 2020-04-11
 ### Added
 - GitHub Workflow Action for <a href="https://github.com/marketplace/actions/intellij-platform-plugin-verifier">IntelliJ Platform Plugin Verifier</a>
-
 
 ### Changed
 - Upgrading to 2020.1
