@@ -86,7 +86,7 @@ public class LogstashUtilFormatter extends Formatter {
         final JsonObjectBuilder builder = BUILDER.createObjectBuilder()
                 .add("timestamp", record.getMillis())
                 .add("level", record.getLevel().toString())
-                .add("thread_id", record.getThreadID())
+                .add("thread_id", record.getLongThreadID())
                 .add("thread_name", Thread.currentThread().getName())
                 .add("class", Objects.requireNonNullElse(record.getSourceClassName(), "null"))
                 .add("method", Objects.requireNonNullElse(record.getSourceMethodName(), "null"))
