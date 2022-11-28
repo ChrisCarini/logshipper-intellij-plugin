@@ -38,6 +38,8 @@ Use the `./elk_stack.sh` bash script to init / start / stop / restart / status /
 
 2. **Launch the IDE** with Logshipper plugin
 3. **Configure** Logshipper settings
+   1. **Hostname:** `localhost`
+   2. **Port:** `5000`
 4. **Navigate** to http://localhost:5601 and login with `elastic/changeme`.
 5. Find the 'Logshipper Telemetry PoC' dashboard
 6. Profit!
