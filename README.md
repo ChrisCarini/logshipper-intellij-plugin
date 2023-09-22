@@ -1,4 +1,7 @@
 # <img src="./src/main/resources/META-INF/pluginIcon.svg" width="32" /> Logshipper
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 <!-- Plugin description -->
 A plugin for JetBrains IDEs to ship logs to a remote logstash service.
 <!-- Plugin description end -->
@@ -63,13 +66,24 @@ Subcommands:
 Note: This script assumes you have 'docker-compose' installed.
 ```
 
-## Contributors
+## Contributors ✨
+
+Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):
 
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ChrisCarini"><img src="https://avatars.githubusercontent.com/u/6374067?v=4?s=100" width="100px;" alt="Chris Carini"/><br /><sub><b>Chris Carini</b></sub></a><br /><a href="https://github.com/ChrisCarini/logshipper-intellij-plugin/issues?q=author%3AChrisCarini" title="Bug reports">🐛</a> <a href="https://github.com/ChrisCarini/logshipper-intellij-plugin/commits?author=ChrisCarini" title="Code">💻</a> <a href="https://github.com/ChrisCarini/logshipper-intellij-plugin/commits?author=ChrisCarini" title="Documentation">📖</a> <a href="#example-ChrisCarini" title="Examples">💡</a> <a href="#ideas-ChrisCarini" title="Ideas, Planning, & Feedback">🤔</a> <a href="#maintenance-ChrisCarini" title="Maintenance">🚧</a> <a href="#question-ChrisCarini" title="Answering Questions">💬</a> <a href="https://github.com/ChrisCarini/logshipper-intellij-plugin/pulls?q=is%3Apr+reviewed-by%3AChrisCarini" title="Reviewed Pull Requests">👀</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
