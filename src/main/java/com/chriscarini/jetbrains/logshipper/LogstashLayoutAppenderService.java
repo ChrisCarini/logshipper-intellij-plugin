@@ -16,14 +16,14 @@ import java.util.logging.Handler;
 
 
 /**
- * A component that creates a {@link LogstashJSONSockerHandler} and adds it as a handler to the
+ * A service that creates a {@link LogstashJSONSockerHandler} and adds it as a handler to the
  * root {@link java.util.logging.Logger} for the IntelliJ IDE.
  */
-public class LogstashLayoutAppenderComponent implements AppLifecycleListener, Disposable {
-    private static final Logger LOG = Logger.getInstance(LogstashLayoutAppenderComponent.class);
+public class LogstashLayoutAppenderService implements AppLifecycleListener, Disposable {
+    private static final Logger LOG = Logger.getInstance(LogstashLayoutAppenderService.class);
 
-    public static LogstashLayoutAppenderComponent getInstance() {
-        return ApplicationManager.getApplication().getComponent(LogstashLayoutAppenderComponent.class);
+    public static LogstashLayoutAppenderService getInstance() {
+        return ApplicationManager.getApplication().getService(LogstashLayoutAppenderService.class);
     }
 
     private LogstashJSONSockerHandler handler = null;
@@ -33,7 +33,7 @@ public class LogstashLayoutAppenderComponent implements AppLifecycleListener, Di
         init();
     }
 
-    public LogstashLayoutAppenderComponent() {
+    public LogstashLayoutAppenderService() {
         Disposer.register(ApplicationManager.getApplication(), this);
     }
 
