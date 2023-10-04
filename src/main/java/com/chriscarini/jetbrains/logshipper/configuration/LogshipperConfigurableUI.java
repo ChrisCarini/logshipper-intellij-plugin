@@ -1,7 +1,7 @@
 package com.chriscarini.jetbrains.logshipper.configuration;
 
-import com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterComponent;
-import com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent;
+import com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterService;
+import com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderService;
 import com.chriscarini.jetbrains.logshipper.messages.Messages;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.ide.CopyPasteManager;
@@ -98,9 +98,9 @@ public class LogshipperConfigurableUI implements ConfigurableUi<SettingsManager.
         if (!sameGenerateSampleLogMessages) {
             settings.generateSampleLogMessages = generateSampleLogMessagesField.isSelected();
             if (generateSampleLogMessagesField.isSelected()) {
-                ConstantLogEntryTesterComponent.getInstance().initComponent();
+                ConstantLogEntryTesterService.getInstance().initComponent();
             } else {
-                ConstantLogEntryTesterComponent.getInstance().cancelLogMessageJob();
+                ConstantLogEntryTesterService.getInstance().cancelLogMessageJob();
             }
         }
 
@@ -108,8 +108,8 @@ public class LogshipperConfigurableUI implements ConfigurableUi<SettingsManager.
         settings.port = portField.getText();
         settings.includeLocationInformation = includeLocationInformationField.isSelected();
 
-        // Re-init the LayoutAppender Component to pick up the latest settings.
-        LogstashLayoutAppenderComponent.getInstance().init();
+        // Re-init the LayoutAppender Service to pick up the latest settings.
+        LogstashLayoutAppenderService.getInstance().init();
     }
 
     @NotNull
