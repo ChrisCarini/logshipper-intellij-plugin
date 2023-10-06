@@ -18,10 +18,10 @@ import java.util.concurrent.TimeUnit;
 
 
 /**
- * An application component used to generate sample log messages.
+ * A service used to generate sample log messages.
  */
-public class ConstantLogEntryTesterComponent implements Disposable {
-    private static final Logger LOG = Logger.getInstance(ConstantLogEntryTesterComponent.class);
+public class ConstantLogEntryTesterService implements Disposable {
+    private static final Logger LOG = Logger.getInstance(ConstantLogEntryTesterService.class);
 
     private static final long LOG_FREQUENCY = 2; // frequency for adding a log message to IDE logs.
 
@@ -31,13 +31,13 @@ public class ConstantLogEntryTesterComponent implements Disposable {
      * Default constructor. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
      * before starting the log message generation job.
      */
-    public ConstantLogEntryTesterComponent() {
+    public ConstantLogEntryTesterService() {
         Disposer.register(ApplicationManager.getApplication(), this);
         this.initComponent();
     }
 
-    public static ConstantLogEntryTesterComponent getInstance() {
-        return ApplicationManager.getApplication().getComponent(ConstantLogEntryTesterComponent.class);
+    public static ConstantLogEntryTesterService getInstance() {
+        return ApplicationManager.getApplication().getService(ConstantLogEntryTesterService.class);
     }
 
     /**

@@ -11,25 +11,15 @@
 
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.configuration.SettingsManager"/>
+    <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderService"/>
+    <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterService"/>
     <applicationConfigurable bundle="messages.logshipper" groupId="other"
                              instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
   </extensions>
 
   <applicationListeners>
-    <listener class="com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent"
+    <listener class="com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderService"
               topic="com.intellij.ide.AppLifecycleListener"/>
   </applicationListeners>
 
-  <application-components>
-    <component>
-      <implementation-class>
-        com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderComponent
-      </implementation-class>
-    </component>
-    <component>
-      <implementation-class>
-        com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterComponent
-      </implementation-class>
-    </component>
-  </application-components>
 </idea-plugin>
