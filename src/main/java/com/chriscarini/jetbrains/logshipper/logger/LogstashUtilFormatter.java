@@ -7,7 +7,6 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.ui.LicensingFacade;
-import com.intellij.util.text.DateFormatUtil;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +17,7 @@ import javax.json.JsonBuilderFactory;
 import javax.json.JsonObjectBuilder;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Properties;
@@ -179,7 +179,7 @@ public class LogstashUtilFormatter extends Formatter {
                 mdcBuilder.add("StrictVersion", appInfoEx.getStrictVersion());
                 mdcBuilder.add("VersionName", appInfoEx.getVersionName());
                 mdcBuilder.add("Build", appInfoEx.getBuild().asString());
-                mdcBuilder.add("BuildDate", DateFormatUtil.getIso8601Format().format(appInfoEx.getBuildDate().getTime()));
+                mdcBuilder.add("BuildDate", DateTimeFormatter.ISO_DATE_TIME.format(appInfoEx.getBuildDate().getTime().toInstant()));
             }
 
             final LicensingFacade licensingFacade = LicensingFacade.getInstance();
@@ -187,7 +187,7 @@ public class LogstashUtilFormatter extends Formatter {
                 mdcBuilder.add("LicensedToMessage", Objects.requireNonNullElse(licensingFacade.getLicensedToMessage(), ""));
                 mdcBuilder.add("LicenseRestrictionsMessages", String.join(";", licensingFacade.getLicenseRestrictionsMessages()));
                 mdcBuilder.add("isEvaluationLicense", Boolean.toString(licensingFacade.isEvaluationLicense()));
-                mdcBuilder.add("LicenseExpirationDate", licensingFacade.getLicenseExpirationDate() != null ? DateFormatUtil.getIso8601Format().format(licensingFacade.getLicenseExpirationDate()) : "Unknown");
+                mdcBuilder.add("LicenseExpirationDate", licensingFacade.getLicenseExpirationDate() != null ? DateTimeFormatter.ISO_DATE_TIME.format(licensingFacade.getLicenseExpirationDate().toInstant()) : "Unknown");
                 mdcBuilder.add("ConfirmationStamps", licensingFacade.confirmationStamps != null ? licensingFacade.confirmationStamps.toString() : "null");
             }
             return mdcBuilder;
