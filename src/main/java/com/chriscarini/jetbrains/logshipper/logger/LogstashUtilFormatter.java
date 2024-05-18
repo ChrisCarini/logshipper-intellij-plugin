@@ -7,6 +7,8 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.ui.LicensingFacade;
+import java.time.ZoneOffset;
+import java.util.Date;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -179,7 +181,7 @@ public class LogstashUtilFormatter extends Formatter {
                 mdcBuilder.add("StrictVersion", appInfoEx.getStrictVersion());
                 mdcBuilder.add("VersionName", appInfoEx.getVersionName());
                 mdcBuilder.add("Build", appInfoEx.getBuild().asString());
-                mdcBuilder.add("BuildDate", DateTimeFormatter.ISO_DATE_TIME.format(appInfoEx.getBuildDate().getTime().toInstant()));
+                mdcBuilder.add("BuildDate", formatDateUTC(appInfoEx.getBuildDate().getTime()));
             }
 
             final LicensingFacade licensingFacade = LicensingFacade.getInstance();
@@ -187,10 +189,14 @@ public class LogstashUtilFormatter extends Formatter {
                 mdcBuilder.add("LicensedToMessage", Objects.requireNonNullElse(licensingFacade.getLicensedToMessage(), ""));
                 mdcBuilder.add("LicenseRestrictionsMessages", String.join(";", licensingFacade.getLicenseRestrictionsMessages()));
                 mdcBuilder.add("isEvaluationLicense", Boolean.toString(licensingFacade.isEvaluationLicense()));
-                mdcBuilder.add("LicenseExpirationDate", licensingFacade.getLicenseExpirationDate() != null ? DateTimeFormatter.ISO_DATE_TIME.format(licensingFacade.getLicenseExpirationDate().toInstant()) : "Unknown");
+                mdcBuilder.add("LicenseExpirationDate", licensingFacade.getLicenseExpirationDate() != null ? formatDateUTC(licensingFacade.getLicenseExpirationDate()) : "Unknown");
                 mdcBuilder.add("ConfirmationStamps", licensingFacade.confirmationStamps != null ? licensingFacade.confirmationStamps.toString() : "null");
             }
             return mdcBuilder;
+        }
+        
+        private static String formatDateUTC(final Date date) {
+            return DateTimeFormatter.ISO_DATE_TIME.format(date.toInstant().atZone(ZoneOffset.UTC));
         }
 
         /**
