@@ -2,10 +2,8 @@ package com.chriscarini.jetbrains.logshipper;
 
 import com.chriscarini.jetbrains.logshipper.configuration.SettingsManager;
 import com.intellij.ide.AppLifecycleListener;
-import com.intellij.openapi.Disposable;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import org.jetbrains.annotations.NotNull;
@@ -19,7 +17,7 @@ import java.util.logging.Handler;
  * A service that creates a {@link LogstashJSONSockerHandler} and adds it as a handler to the
  * root {@link java.util.logging.Logger} for the IntelliJ IDE.
  */
-public class LogstashLayoutAppenderService implements AppLifecycleListener, Disposable {
+public class LogstashLayoutAppenderService implements AppLifecycleListener {
     private static final Logger LOG = Logger.getInstance(LogstashLayoutAppenderService.class);
 
     public static LogstashLayoutAppenderService getInstance() {
@@ -33,9 +31,7 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener, Disp
         init();
     }
 
-    public LogstashLayoutAppenderService() {
-        Disposer.register(ApplicationManager.getApplication(), this);
-    }
+    public LogstashLayoutAppenderService() {}
 
     public void init() {
         // Add a handler to the root logger; this handler will log to logstash.
@@ -81,10 +77,5 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener, Disp
 
     private java.util.logging.Logger getRootLogger() {
         return java.util.logging.Logger.getLogger("");
-    }
-
-    @Override
-    public void dispose() {
-        Disposer.dispose(this);
     }
 }
