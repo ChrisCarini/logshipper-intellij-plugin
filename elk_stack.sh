@@ -49,21 +49,34 @@ sub_init() {
   done
   echo 'Kibana ready!'
 
+  popd >/dev/null || exit
+  
+  # Add a sample dashboard into Kibana
+  sub_create_dashboard
+
+  sub_status
+}
+
+sub_create_dashboard() {
+  pushd ./elk >/dev/null || exit
+
   # Add a sample dashboard into Kibana
   echo "Adding dashboard for 'Logshipper Telemetry PoC'..."
   DASHBOARD_FILE=./kibana/Logshipper\ Telemetry\ PoC\ Dashboard.ndjson
   cat "${DASHBOARD_FILE}" | jq -c >"${DASHBOARD_FILE}.TMP" && mv "${DASHBOARD_FILE}.TMP" "${DASHBOARD_FILE}"
-  docker-compose exec kibana /bin/bash -c "curl -X POST localhost:5601/api/saved_objects/_import?createNewCopies=true \
+  curl --silent -X POST localhost:5601/api/saved_objects/_import?createNewCopies=true \
         -H 'kbn-xsrf: true' \
-        --form file=@/usr/share/kibana/dash.ndjson \
-        -u 'elastic:changeme'
-    "
+        --form file=@"${DASHBOARD_FILE}" \
+        -u 'elastic:changeme' > /tmp/logshipper_dashboard_import.json
+  json_output=$(cat /tmp/logshipper_dashboard_import.json)
+  echo "Imported $(echo "$json_output" | jq '.successCount') Items:"
+  echo "=================="
+  echo "$json_output" | jq -r '.successResults[] | @sh "printf \"[%-13s] %s\\n\" \(.type) \(.meta.title)"' | bash
+  rm /tmp/logshipper_dashboard_import.json
   git restore "${DASHBOARD_FILE}"
   echo 'Dashboard added!'
 
   popd >/dev/null || exit
-
-  sub_status
 }
 
 sub_start() {
