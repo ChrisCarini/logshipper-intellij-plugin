@@ -62,6 +62,10 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener {
         } else {
             LOG.info("Logshipper hostname / port is empty, please configure this in the settings.");
         }
+
+        // We call to the ConstantLogEntryTesterService to ensure that it is created & running, since IJ services are loaded 'on demand'.
+        // Ideally, we'd just want this service to start right away via plugin.xml, but that's no longer an option.
+        ConstantLogEntryTesterService.getInstance();
     }
 
     /**
