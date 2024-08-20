@@ -31,6 +31,7 @@ public class ConstantLogEntryTesterService implements Disposable {
      * Default constructor. Will check that the respective setting ({@code generateSampleLogMessages} is enabled
      * before starting the log message generation job.
      */
+    @SuppressWarnings("this-escape")
     public ConstantLogEntryTesterService() {
         Disposer.register(ApplicationManager.getApplication(), this);
         this.initComponent();
