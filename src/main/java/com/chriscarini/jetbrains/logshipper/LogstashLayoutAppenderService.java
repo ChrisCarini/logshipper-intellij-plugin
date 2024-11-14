@@ -56,6 +56,7 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener {
             getRootLogger().addHandler(this.handler);
 
             // Register a shutdown task to remove the handler and close it cleanly.
+            // noinspection UnstableApiUsage
             ShutDownTracker.getInstance().registerShutdownTask(this::cleanupHandler);
 
             LOG.info("Added Logshipper handler to root logger");
