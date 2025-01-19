@@ -169,8 +169,13 @@ public class LogstashUtilFormatter extends Formatter {
             final JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
 
             mdcBuilder.add("PermanentInstallationID", PermanentInstallationID.get())
-                    .add("JREInformation", IdeBundle.message("about.box.jre", properties.getProperty("java.runtime.version", properties.getProperty("java.version", "unknown")), properties.getProperty("os.arch", "")))
-                    .add("JVMInformation", IdeBundle.message("about.box.vm", properties.getProperty("java.vm.name", "unknown"), properties.getProperty("java.vendor", "unknown")));
+                // Use `String.format()` instead of `IdeBundle.message()` since `DynamicBundle.getBundle()` started logging as of 
+                // commit https://github.com/JetBrains/intellij-community/commit/69f79762252518dbc7c1535d466324a5cf311ad3, which 
+                // causes a recursive loop, leading to StackOverflowError.
+                //    .add("JREInformation", IdeBundle.message("about.box.jre", properties.getProperty("java.runtime.version", properties.getProperty("java.version", "unknown")), properties.getProperty("os.arch", "")))
+                    .add("JREInformation", String.format("Runtime version: %s %s", properties.getProperty("java.runtime.version", properties.getProperty("java.version", "unknown")), properties.getProperty("os.arch", "")))
+                //    .add("JVMInformation", IdeBundle.message("about.box.vm", properties.getProperty("java.vm.name", "unknown"), properties.getProperty("java.vendor", "unknown")));
+                    .add("JVMInformation", String.format("VM: %s by %s", properties.getProperty("java.vm.name", "unknown"), properties.getProperty("java.vendor", "unknown")));
 
             if (!ApplicationManager.getApplication().isDisposed()) {
                 final ApplicationInfoEx appInfoEx = ApplicationInfoEx.getInstanceEx();

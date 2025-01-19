@@ -9,6 +9,7 @@
 
 ### Changed
 - Upgrading IntelliJ from 2024.3.1.1 to 2024.3.2
+- Use `String.format()` instead of `IdeBundle.message()` in logs, since the latter causes recursion leading to `StackOverflowError`.
 
 ### Deprecated
 
