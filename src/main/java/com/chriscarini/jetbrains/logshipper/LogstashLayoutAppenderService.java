@@ -5,7 +5,6 @@ import com.intellij.ide.AppLifecycleListener;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.openapi.util.ShutDownTracker;
 import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.platform.ide.bootstrap.StartupUtil;
 import org.jetbrains.annotations.NotNull;
@@ -58,9 +57,16 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener {
             // Add the handler to the root Logger
             getRootLogger().addHandler(this.handler);
 
-            // Register a shutdown task to remove the handler and close it cleanly.
-            // noinspection UnstableApiUsage
-            ShutDownTracker.getInstance().registerShutdownTask(this::cleanupHandler);
+            // NOTE: `ShutDownTracker` class was marked with `@ApiStatus.Internal` on 2024-07-17 in 
+            // https://github.com/JetBrains/intellij-community/commit/ef82709 - as a possible workaround, 
+            // we could try registering a {@link Runtime#addShutdownHook(Thread)} directly. Instead of doing
+            // that, on 2025-01-18, in debug mode, I noticed that this shutdown task is actually invoked 
+            // *AFTER* `this.handler` is cleaned up (from the `disposableConsumer` of `LogstashJSONSockerHandler`)
+            // which is likely being 
+            // As a byproduct, I'm going to opt to just XX
+            //  // Register a shutdown task to remove the handler and close it cleanly.
+            //  // noinspection UnstableApiUsage
+            //  ShutDownTracker.getInstance().registerShutdownTask(this::cleanupHandler);
             
             // Once we're attached to the root logger, log out the same essential information 
             // about the IDE as normally happens during IDE startup.

@@ -13,6 +13,7 @@
 ### Deprecated
 
 ### Removed
+- Remove call to `@ApiStatus.Internal` method `ShutDownTracker.getInstance().registerShutdownTask()`.
 
 ### Fixed
 
