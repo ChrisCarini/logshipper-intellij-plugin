@@ -5,20 +5,31 @@
 ## [Unreleased]
 
 ### Added
-- Added more detailed logging for Logshipper log handler is added/removed to/from the root logger.
 
 ### Changed
-- Upgrading IntelliJ from 2024.3.1.1 to 2024.3.2
-- Use `String.format()` instead of `IdeBundle.message()` in logs, since the latter causes recursion leading to `StackOverflowError`.
 
 ### Deprecated
 
 ### Removed
-- Remove call to `@ApiStatus.Internal` method `ShutDownTracker.getInstance().registerShutdownTask()`.
 
 ### Fixed
 
 ### Security
+
+## [4.2.3] - 2025-01-19
+
+### Added
+
+- Added more detailed logging for Logshipper log handler is added/removed to/from the root logger.
+
+### Changed
+
+- Upgrading IntelliJ from 2024.3.1.1 to 2024.3.2
+- Use `String.format()` instead of `IdeBundle.message()` in logs, since the latter causes recursion leading to `StackOverflowError`.
+
+### Removed
+
+- Remove call to `@ApiStatus.Internal` method `ShutDownTracker.getInstance().registerShutdownTask()`.
 
 ## [4.2.2] - 2025-01-02
 
@@ -360,7 +371,8 @@
 
 - Initial release.
 
-[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.2...HEAD
+[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.3...HEAD
+[4.2.3]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.2...v4.2.3
 [4.2.2]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.1...v4.2.2
 [4.2.1]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.1.4...v4.2.0
