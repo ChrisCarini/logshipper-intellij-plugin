@@ -5,12 +5,16 @@
 ## [Unreleased]
 
 ### Added
+- Added more detailed logging for Logshipper log handler is added/removed to/from the root logger.
 
 ### Changed
+- Upgrading IntelliJ from 2024.3.1.1 to 2024.3.2
+- Use `String.format()` instead of `IdeBundle.message()` in logs, since the latter causes recursion leading to `StackOverflowError`.
 
 ### Deprecated
 
 ### Removed
+- Remove call to `@ApiStatus.Internal` method `ShutDownTracker.getInstance().registerShutdownTask()`.
 
 ### Fixed
 
