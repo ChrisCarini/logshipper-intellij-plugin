@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Added
+- Added more detailed logging for Logshipper log handler is added/removed to/from the root logger.
 
 ### Changed
 - Upgrading IntelliJ from 2024.3.1.1 to 2024.3.2
