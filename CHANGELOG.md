@@ -8,6 +8,7 @@
 - Added a connection checker service to add/remove logger handler every 5 min, as needed
 
 ### Changed
+- Upgrading IntelliJ from 2025.1.2 to 2025.1.3
 
 ### Deprecated
 
