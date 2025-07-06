@@ -12,9 +12,13 @@
   <extensions defaultExtensionNs="com.intellij">
     <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.configuration.SettingsManager"/>
     <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.LogstashLayoutAppenderService"/>
+    <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.ConnectionCheckerService"/>
     <applicationService serviceImplementation="com.chriscarini.jetbrains.logshipper.ConstantLogEntryTesterService"/>
-    <applicationConfigurable bundle="messages.logshipper" groupId="other"
-                             instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
+    <applicationConfigurable
+            bundle="messages.logshipper"
+            key="configuration.window.display.name.logshipper.settings"
+            groupId="other"
+            instance="com.chriscarini.jetbrains.logshipper.configuration.LogshipperConfigurable"/>
   </extensions>
 
   <applicationListeners>

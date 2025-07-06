@@ -5,6 +5,7 @@
 ## [Unreleased]
 
 ### Added
+- Added a connection checker service to add/remove logger handler every 5 min, as needed
 
 ### Changed
 
