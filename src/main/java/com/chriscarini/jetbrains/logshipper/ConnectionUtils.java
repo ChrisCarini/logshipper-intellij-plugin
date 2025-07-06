@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 public class ConnectionUtils {
-    private static final Logger LOG = Logger.getInstance(LogstashLayoutAppenderService.class);
+    private static final Logger LOG = Logger.getInstance(ConnectionUtils.class);
 
     private ConnectionUtils() {
     }

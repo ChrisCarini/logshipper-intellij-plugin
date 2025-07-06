@@ -183,7 +183,7 @@ public class LogshipperConfigurableUI implements ConfigurableUi<SettingsManager.
      * Cancel the {@code checkConnectionStatusClearJob} if (1) the job is not null AND (2) the job is not done OR (3) has
      * not been canceled.
      */
-    private void cancelCheckCredentialsClearJob() {
+    private void cancelCheckConnectionStatusClearJob() {
         if (checkConnectionStatusClearJob != null && (!checkConnectionStatusClearJob.isDone()
                 || !checkConnectionStatusClearJob.isCancelled())) {
             checkConnectionStatusClearJob.cancel(true);
@@ -214,7 +214,7 @@ public class LogshipperConfigurableUI implements ConfigurableUi<SettingsManager.
                                         AllIcons.General.ExclMark, true, true);
                             }
                             // Cancel any existing jobs to clear the text and re-create (reset clear timer)
-                            cancelCheckCredentialsClearJob();
+                            cancelCheckConnectionStatusClearJob();
                             checkConnectionStatusClearJob = JobScheduler.getScheduler()
                                     .schedule(() -> setApiCheckConnectionResult("", null, false, true), 10, TimeUnit.SECONDS);
                         }
