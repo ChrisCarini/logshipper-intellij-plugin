@@ -5,10 +5,8 @@
 ## [Unreleased]
 
 ### Added
-- Added a connection checker service to add/remove logger handler every 5 min, as needed
 
 ### Changed
-- Upgrading IntelliJ from 2025.1.2 to 2025.1.3
 
 ### Deprecated
 
@@ -17,6 +15,16 @@
 ### Fixed
 
 ### Security
+
+## [5.0.2] - 2025-07-06
+
+### Added
+
+- Added a connection checker service to add/remove logger handler every 5 min, as needed
+
+### Changed
+
+- Upgrading IntelliJ from 2025.1.2 to 2025.1.3
 
 ## [5.0.1] - 2025-07-06
 
@@ -416,7 +424,8 @@
 
 - Initial release.
 
-[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.0.1...HEAD
+[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.0.2...HEAD
+[5.0.2]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.0.1...v5.0.2
 [5.0.1]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.0.0...v5.0.1
 [5.0.0]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.8...v5.0.0
 [4.2.8]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v4.2.7...v4.2.8
