@@ -33,7 +33,7 @@ public class ConstantLogEntryTesterService implements Disposable {
      */
     @SuppressWarnings("this-escape")
     public ConstantLogEntryTesterService() {
-        Disposer.register(ApplicationManager.getApplication(), this);
+        Disposer.register(LogshipperPluginDisposable.getInstance(), this);
         this.initComponent();
     }
 
@@ -51,10 +51,10 @@ public class ConstantLogEntryTesterService implements Disposable {
             this.logMessageJob = JobScheduler.getScheduler()
                     .scheduleWithFixedDelay(this::logTime, LOG_FREQUENCY, LOG_FREQUENCY, TimeUnit.SECONDS);
 
-            // Subscribe to appWillBeClosed event to emit shutdown metric
+            // Subscribe to appWillBeClosed event to stop the log message job
             // we cannot do this disposeComponent as services seem to get killed too fast (before dispose but after appClosing)
             final Application app = ApplicationManager.getApplication();
-            final MessageBusConnection connection = app.getMessageBus().connect(app);
+            final MessageBusConnection connection = app.getMessageBus().connect(LogshipperPluginDisposable.getInstance());
             connection.subscribe(AppLifecycleListener.TOPIC, new AppLifecycleListener() {
                 @Override
                 public void appWillBeClosed(final boolean isRestart) {
