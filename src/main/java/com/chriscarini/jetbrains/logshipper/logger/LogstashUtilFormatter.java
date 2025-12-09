@@ -2,9 +2,7 @@ package com.chriscarini.jetbrains.logshipper.logger;
 
 
 import com.chriscarini.jetbrains.logshipper.logger.data.HostData;
-import com.intellij.ide.IdeBundle;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.PermanentInstallationID;
 import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.ui.LicensingFacade;
 import java.time.ZoneOffset;
@@ -168,9 +166,9 @@ public class LogstashUtilFormatter extends Formatter {
             final Properties properties = System.getProperties();
             final JsonObjectBuilder mdcBuilder = BUILDER.createObjectBuilder();
 
-            mdcBuilder.add("PermanentInstallationID", PermanentInstallationID.get())
-                // Use `String.format()` instead of `IdeBundle.message()` since `DynamicBundle.getBundle()` started logging as of 
-                // commit https://github.com/JetBrains/intellij-community/commit/69f79762252518dbc7c1535d466324a5cf311ad3, which 
+          mdcBuilder
+                // Use `String.format()` instead of `IdeBundle.message()` since `DynamicBundle.getBundle()` started logging as of
+                // commit https://github.com/JetBrains/intellij-community/commit/69f79762252518dbc7c1535d466324a5cf311ad3, which
                 // causes a recursive loop, leading to StackOverflowError.
                 //    .add("JREInformation", IdeBundle.message("about.box.jre", properties.getProperty("java.runtime.version", properties.getProperty("java.version", "unknown")), properties.getProperty("os.arch", "")))
                     .add("JREInformation", String.format("Runtime version: %s %s", properties.getProperty("java.runtime.version", properties.getProperty("java.version", "unknown")), properties.getProperty("os.arch", "")))
