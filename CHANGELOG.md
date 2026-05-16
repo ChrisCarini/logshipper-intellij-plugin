@@ -7,7 +7,6 @@
 ### Added
 
 ### Changed
-- Upgrading IntelliJ from 2026.1.1 to 2026.1.2
 
 ### Deprecated
 
@@ -16,6 +15,12 @@
 ### Fixed
 
 ### Security
+
+## [6.0.2] - 2026-05-16
+
+### Changed
+
+- Upgrading IntelliJ from 2026.1.1 to 2026.1.2
 
 ## [6.0.1] - 2026-04-24
 
@@ -500,7 +505,8 @@
 
 - Initial release.
 
-[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v6.0.1...HEAD
+[Unreleased]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v6.0.2...HEAD
+[6.0.2]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v6.0.1...v6.0.2
 [6.0.1]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.2.4...v6.0.0
 [5.2.4]: https://github.com/ChrisCarini/logshipper-intellij-plugin/compare/v5.2.2...v5.2.4
