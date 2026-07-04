@@ -3,9 +3,7 @@ package com.chriscarini.jetbrains.logshipper;
 import com.chriscarini.jetbrains.logshipper.configuration.SettingsManager;
 import com.intellij.ide.AppLifecycleListener;
 import com.intellij.openapi.application.ApplicationManager;
-import com.intellij.openapi.application.ex.ApplicationInfoEx;
 import com.intellij.openapi.diagnostic.Logger;
-import com.intellij.platform.ide.bootstrap.StartupUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -79,10 +77,6 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener {
         //  // Register a shutdown task to remove the handler and close it cleanly.
         //  // noinspection UnstableApiUsage
         //  ShutDownTracker.getInstance().registerShutdownTask(this::cleanupHandler);
-
-        // Once we're attached to the root logger, log out the same essential information
-        // about the IDE as normally happens during IDE startup.
-        StartupUtil.logEssentialInfoAboutIde(LOG, ApplicationInfoEx.getInstanceEx(), List.of(""));
 
         LOG.info("Added Logshipper handler to root logger");
 

@@ -4,6 +4,10 @@
 
 ## [Unreleased]
 
+### Removed
+
+- Remove call to `@ApiStatus.Internal` method `StartupUtil.logEssentialInfoAboutIde()`.
+
 ## [6.0.3] - 2026-06-06
 
 ### Changed
