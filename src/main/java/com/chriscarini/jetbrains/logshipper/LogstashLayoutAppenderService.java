@@ -2,12 +2,16 @@ package com.chriscarini.jetbrains.logshipper;
 
 import com.chriscarini.jetbrains.logshipper.configuration.SettingsManager;
 import com.intellij.ide.AppLifecycleListener;
+import com.intellij.openapi.application.ApplicationInfo;
 import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.application.ApplicationNamesInfo;
 import com.intellij.openapi.diagnostic.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Handler;
 
 
@@ -77,6 +81,15 @@ public class LogstashLayoutAppenderService implements AppLifecycleListener {
         //  // Register a shutdown task to remove the handler and close it cleanly.
         //  // noinspection UnstableApiUsage
         //  ShutDownTracker.getInstance().registerShutdownTask(this::cleanupHandler);
+
+        // Once we're attached to the root logger, log out essential information about the IDE, similar
+        // to what normally happens during IDE startup. We avoid the `@ApiStatus.Internal` method
+        // `StartupUtil.logEssentialInfoAboutIde()` and instead mirror the public-API summary line used by
+        // IntelliJ's warmup module (`ApplicationNamesInfo` + `ApplicationInfo`). See:
+        // https://github.com/JetBrains/intellij-community/blob/master/platform/warmup/src/com/intellij/warmup/util/logging.kt
+        final ApplicationInfo appInfo = ApplicationInfo.getInstance();
+        final String buildDate = new SimpleDateFormat("dd MMM yyyy HH:mm", Locale.US).format(appInfo.getBuildDate().getTime());
+        LOG.info(String.format("IDE: %s (build #%s, %s)", ApplicationNamesInfo.getInstance().getFullProductName(), appInfo.getBuild().asString(), buildDate));
 
         LOG.info("Added Logshipper handler to root logger");
 

@@ -4,9 +4,9 @@
 
 ## [Unreleased]
 
-### Removed
+### Changed
 
-- Remove call to `@ApiStatus.Internal` method `StartupUtil.logEssentialInfoAboutIde()`.
+- Replace call to `@ApiStatus.Internal` method `StartupUtil.logEssentialInfoAboutIde()` with a public-API summary log of essential IDE information (`ApplicationNamesInfo` + `ApplicationInfo`).
 
 ## [6.0.3] - 2026-06-06
 
