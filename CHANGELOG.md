@@ -7,6 +7,7 @@
 ## [6.0.4] - 2026-07-04
 
 ### Changed
+- Upgrading IntelliJ from 2026.2.0.1 to 2026.2.1
 - Upgrading IntelliJ from 2026.2 to 2026.2.0.1
 - Upgrading IntelliJ from 2026.1.4 to 2026.2
 
